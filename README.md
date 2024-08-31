@@ -1,1 +1,0 @@
-# fsdl-text-recognizer-2022-labs
