@@ -25,7 +25,7 @@ class BaseLitModel(L.LightningModule):
 
     def __init__(self, model, args: argparse.Namespace = None):
         super().__init__()
-        self.model = CNN(EMNIST().data_config())
+        self.model = CNN(EMNIST().config())
         self.args = vars(args) if args is not None else {}
 
         self.data_config = self.model.data_config

@@ -93,6 +93,10 @@ class EMNIST(L.LightningDataModule):
 
     def test_dataloader(self):
       return torch.utils.data.DataLoader(self.data_test, batch_size=32, shuffle=False)
+    
+    def config(self):
+      """Return important settings of the dataset, which will be passed to instantiate models."""
+      return {"input_dims": self.input_dims, "output_dims": self.output_dims, "mapping": self.mapping}
 
 
 def _download_and_process_emnist():
