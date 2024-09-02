@@ -18,7 +18,7 @@ from training.util import DATA_CLASS_MODULE, import_class, MODEL_CLASS_MODULE, s
 import lightning as L
 from lightning.pytorch.cli import LightningCLI
 
-from text_recognizer.models.cnn import CNN
+from text_recognizer.lit_models.base import BaseLitModel
 from text_recognizer.data.emnist import EMNIST
 
 
@@ -161,5 +161,5 @@ def main():
 if __name__ == "__main__":
     #main()
 
-    cli = LightningCLI(model_class=CNN,
+    cli = LightningCLI(model_class=BaseLitModel,
                        datamodule_class=EMNIST)

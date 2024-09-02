@@ -10,6 +10,9 @@ import h5py
 import numpy as np
 import toml
 
+import torch
+import lightning as L
+
 from text_recognizer.data.base_data_module import _download_raw_dataset, BaseDataModule, load_and_print_info
 from text_recognizer.data.util import BaseDataset, split_dataset
 import text_recognizer.metadata.emnist as metadata
@@ -29,7 +32,7 @@ SAMPLE_TO_BALANCE = True  # If true, take at most the mean number of instances p
 TRAIN_FRAC = 0.8
 
 
-class EMNIST(BaseDataModule):
+class EMNIST(L.LightningDataModule):
     """EMNIST dataset of handwritten characters and digits.
 
     "The EMNIST dataset is a set of handwritten character digits derived from the NIST Special Database 19
@@ -80,6 +83,16 @@ class EMNIST(BaseDataModule):
             f"Batch y stats: {(y.shape, y.dtype, y.min(), y.max())}\n"
         )
         return basic + data
+    
+    # Following methods {train_dataloader, val_dataloader, test_dataloader} are used to return data using DataLoader
+    def train_dataloader(self):
+      return torch.utils.data.DataLoader(self.data_train, batch_size=32, shuffle=True)
+
+    def val_dataloader(self):
+      return torch.utils.data.DataLoader(self.data_val, batch_size=32, shuffle=True)
+
+    def test_dataloader(self):
+      return torch.utils.data.DataLoader(self.data_test, batch_size=32, shuffle=False)
 
 
 def _download_and_process_emnist():
