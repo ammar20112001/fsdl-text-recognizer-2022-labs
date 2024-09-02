@@ -23,3 +23,5 @@ tornado>=6.3,<6.4
 pytorch-lightning
 torchmetrics<0.8
 wandb==0.12.17
+lightning==2.4.0
+jsonargparse[signatures,urls]

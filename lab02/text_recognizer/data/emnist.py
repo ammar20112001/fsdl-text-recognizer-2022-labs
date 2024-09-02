@@ -44,7 +44,7 @@ class EMNIST(L.LightningDataModule):
     """
 
     def __init__(self, args=None):
-        super().__init__(args)
+        super().__init__()
 
         self.mapping = metadata.MAPPING
         self.inverse_mapping = {v: k for k, v in enumerate(self.mapping)}
