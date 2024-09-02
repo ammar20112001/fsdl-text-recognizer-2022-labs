@@ -3,12 +3,23 @@ import argparse
 from pathlib import Path
 
 import numpy as np
+'''
 import pytorch_lightning as pl
+'''
 from pytorch_lightning.utilities.rank_zero import rank_zero_info, rank_zero_only
 import torch
 
+'''
 from text_recognizer import lit_models
+from text_recognizer.data import emnist
+'''
 from training.util import DATA_CLASS_MODULE, import_class, MODEL_CLASS_MODULE, setup_data_and_model_from_args
+
+import lightning as L
+from lightning.pytorch.cli import LightningCLI
+
+from text_recognizer.models.cnn import CNN
+from text_recognizer.data.emnist import EMNIST
 
 
 # In order to ensure reproducible experiments, we must set random seeds.
@@ -148,4 +159,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+
+    cli = LightningCLI(model_class=CNN,
+                       datamodule_class=EMNIST)

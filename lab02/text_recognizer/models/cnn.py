@@ -45,7 +45,9 @@ class CNN(nn.Module):
 
     def __init__(self, data_config: Dict[str, Any], args: argparse.Namespace = None) -> None:
         super().__init__()
+        '''
         self.args = vars(args) if args is not None else {}
+        '''
         self.data_config = data_config
 
         input_channels, input_height, input_width = self.data_config["input_dims"]
@@ -56,9 +58,15 @@ class CNN(nn.Module):
 
         num_classes = len(self.data_config["mapping"])
 
+        conv_dim = 64
+        fc_dim = 128
+        fc_dropout = 0.25
+        
+        '''
         conv_dim = self.args.get("conv_dim", CONV_DIM)
         fc_dim = self.args.get("fc_dim", FC_DIM)
         fc_dropout = self.args.get("fc_dropout", FC_DROPOUT)
+        '''
 
         self.conv1 = ConvBlock(input_channels, conv_dim)
         self.conv2 = ConvBlock(conv_dim, conv_dim)

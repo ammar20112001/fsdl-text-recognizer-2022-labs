@@ -1,9 +1,15 @@
 """Basic LightningModules on which other modules can be built."""
 import argparse
-
+'''
 import pytorch_lightning as pl
+'''
 import torch
 from torchmetrics import Accuracy
+
+import lightning as L
+
+from text_recognizer.models.cnn import CNN
+from text_recognizer.data.emnist import EMNIST
 
 
 OPTIMIZER = "Adam"
@@ -12,36 +18,42 @@ LOSS = "cross_entropy"
 ONE_CYCLE_TOTAL_STEPS = 100
 
 
-class BaseLitModel(pl.LightningModule):
+class BaseLitModel(L.LightningModule):
     """
     Generic PyTorch-Lightning class that must be initialized with a PyTorch module.
     """
 
     def __init__(self, model, args: argparse.Namespace = None):
         super().__init__()
-        self.model = model
+        self.model = CNN(EMNIST().data_config())
         self.args = vars(args) if args is not None else {}
 
         self.data_config = self.model.data_config
         self.mapping = self.data_config["mapping"]
         self.input_dims = self.data_config["input_dims"]
 
-        optimizer = self.args.get("optimizer", OPTIMIZER)
-        self.optimizer_class = getattr(torch.optim, optimizer)
+        self.optimizer_class = torch.optim.Adam
+        '''optimizer = self.args.get("optimizer", OPTIMIZER)
+        self.optimizer_class = getattr(torch.optim, optimizer)'''
 
-        self.lr = self.args.get("lr", LR)
+        self.lr = 1e-3
+        '''self.lr = self.args.get("lr", LR)'''
 
-        loss = self.args.get("loss", LOSS)
+        self.loss_fn = torch.nn.functional.cross_entropy
+        '''loss = self.args.get("loss", LOSS)
         if loss not in ("transformer",):
-            self.loss_fn = getattr(torch.nn.functional, loss)
+            self.loss_fn = getattr(torch.nn.functional, loss)'''
 
-        self.one_cycle_max_lr = self.args.get("one_cycle_max_lr", None)
-        self.one_cycle_total_steps = self.args.get("one_cycle_total_steps", ONE_CYCLE_TOTAL_STEPS)
+        self.one_cycle_max_lr = None
+        self.one_cycle_total_steps = 100
+        '''self.one_cycle_max_lr = self.args.get("one_cycle_max_lr", None)
+        self.one_cycle_total_steps = self.args.get("one_cycle_total_steps", ONE_CYCLE_TOTAL_STEPS)'''
 
         self.train_acc = Accuracy()
         self.val_acc = Accuracy()
         self.test_acc = Accuracy()
 
+    '''
     @staticmethod
     def add_to_argparse(parser):
         parser.add_argument("--optimizer", type=str, default=OPTIMIZER, help="optimizer class from torch.optim")
@@ -50,7 +62,8 @@ class BaseLitModel(pl.LightningModule):
         parser.add_argument("--one_cycle_total_steps", type=int, default=ONE_CYCLE_TOTAL_STEPS)
         parser.add_argument("--loss", type=str, default=LOSS, help="loss function from torch.nn.functional")
         return parser
-
+    '''
+    
     def configure_optimizers(self):
         optimizer = self.optimizer_class(self.parameters(), lr=self.lr)
         if self.one_cycle_max_lr is None:
