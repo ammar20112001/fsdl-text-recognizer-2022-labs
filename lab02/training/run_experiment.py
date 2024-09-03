@@ -161,5 +161,9 @@ def main():
 if __name__ == "__main__":
     #main()
 
+    '''
     cli = LightningCLI(model_class=BaseLitModel,
                        datamodule_class=EMNIST)
+    '''
+    
+    cli = LightningCLI()

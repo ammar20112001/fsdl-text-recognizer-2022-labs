@@ -57,7 +57,7 @@ class EMNIST(L.LightningDataModule):
             _download_and_process_emnist()
 
     def setup(self, stage: str = None) -> None:
-        if stage == "fit" or stage is None:
+        if stage == "fit" or stage == 'validate' or stage is None:
             with h5py.File(PROCESSED_DATA_FILENAME, "r") as f:
                 self.x_trainval = f["x_train"][:]
                 self.y_trainval = f["y_train"][:].squeeze().astype(int)
